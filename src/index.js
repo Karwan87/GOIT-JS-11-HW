@@ -1,6 +1,7 @@
 import axios from 'axios';
 import notiflix from 'notiflix';
 import { searchImages } from './api.js';
+let page = 1;
 const displayNoResultsNotification = () => {
   notiflix.Notify.warning(
     'Sorry, there are no images matching your search query. Please try again.'
@@ -16,7 +17,8 @@ form.addEventListener('submit', async e => {
   const searchTerm = input.value.trim();
   if (searchTerm !== '') {
     try {
-      const images = await searchImages(searchTerm);
+      const images = await searchImages(searchTerm, page);
+      console.log(images);
       if (images.length > 0) {
         displayImages(images);
       } else {
@@ -25,6 +27,7 @@ form.addEventListener('submit', async e => {
         );
       }
     } catch (error) {
+      console.log(error);
       notiflix.Notify.failure('Wystąpił błąd podczas pobierania danych.');
     }
   }
