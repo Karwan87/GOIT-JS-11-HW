@@ -4,12 +4,16 @@ let currentPage = 1;
 const perPage = 40;
 let currentQuery = '';
 
+const endOfResults = document.getElementById('end-of-results');
+let totalHits = 0;
+let fetching = false;
+
 const loadMoreButton = document.querySelector('.load-more');
 const gallery = document.querySelector('.gallery');
 
 loadMoreButton.addEventListener('click', () => {
   currentPage++;
-  searchImages(currentQuery);
+  searchImages(currentQuery, currentPage);
 });
 
 const updateUI = (images, totalHits) => {

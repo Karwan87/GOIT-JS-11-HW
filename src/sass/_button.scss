@@ -1,24 +1,24 @@
-#search-button {
-  border: none;
-  color: rgb(37, 34, 34);
-}
-
 .icon {
-  transition: transform 0.2s ease;
-  background-color: lightgrey;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 35px;
-  height: 35px;
-  position: relative;
-  left: 50%;
-  &:hover {
-    transform: scale(1.2);
-    cursor: pointer;
-  }
+  width: 32px;
+  height: 32px;
+  border: none;
+  transition: transform 250ms ease-in-out;
 }
-
-#search-button .icon {
-  pointer-events: none;
+.icon-button {
+  display: inline-block;
+  transition: transform 250ms ease-in-out;
+}
+#search-button {
+  background-color: #fff;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
+  &:hover .icon {
+    transform: scale(1.2);
+  }
+  &:hover .icon-button {
+    transform: scale(1.2);
+  }
 }

@@ -5,7 +5,6 @@ const PER_PAGE = 40;
 
 export async function searchImages(searchTerm, page) {
   try {
-    'searchTerm:', searchTerm;
     const response = await axios.get('https://pixabay.com/api/', {
       params: {
         key: API_KEY,
@@ -18,14 +17,16 @@ export async function searchImages(searchTerm, page) {
       },
     });
     const data = response.data;
+    const hits = data.hits;
+    console.log(hits);
     return {
-      images: data.hits,
+      hits,
       totalHits: data.totalHits,
     };
   } catch (error) {
     console.error(error);
     return {
-      images: [],
+      hits: [],
       totalHits: 0,
     };
   }

@@ -1,0 +1,16 @@
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 60px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(221, 209, 194);
+}
+
+.photo-card {
+  margin: 0 5px;
+}
+.info {
+  text-align: center;
+}

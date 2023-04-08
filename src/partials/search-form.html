@@ -1,5 +1,4 @@
 <header>
-  <h1>Search images</h1>
   <form class="window-searcher" id="search-form">
     <input
       class="input"
@@ -9,11 +8,11 @@
       placeholder="Search images"
     />
     <button id="search-button" type="submit">
-      <i class="icon">
+      <i class="icon icon-button">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="45"
-          height="45"
+          width="30"
+          height="30"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -26,11 +25,12 @@
         </svg>
       </i>
     </button>
-    <button type="submit" id="search-button">
-      <i class="fas fa-search"></i>
-    </button>
   </form>
 </header>
 <main>
   <div id="results"></div>
+  <button type="button" class="load-more">Load more</button>
+  <div id="end-of-results" class="hidden">
+    We're sorry, but you've reached the end of search results.
+  </div>
 </main>
