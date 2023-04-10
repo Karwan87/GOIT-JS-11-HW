@@ -35,3 +35,4 @@ export async function searchImages(searchTerm, page) {
     };
   }
 }
+// info

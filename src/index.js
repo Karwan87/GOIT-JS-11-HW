@@ -130,7 +130,7 @@ function displayImages(images, totalHits) {
   });
   checkIfReachedEndOfResults(totalHits);
 }
-
+// info
 form.addEventListener('submit', async e => {
   e.preventDefault();
   let searchTerm = input.value.trim();
