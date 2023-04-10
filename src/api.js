@@ -1,5 +1,5 @@
 import axios from 'axios';
-import SimpleLightbox from 'SimpleLightbox';
+import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const API_KEY = '35038868-0cefdd0904fdf8a70a3b6f6a2';
