@@ -5,8 +5,8 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 let page = 1;
-let searchTerm = '';
-const pageSize = 40;
+let searchTerm = 'input.value.trim';
+const pageSize = 600;
 const loadMoreButton = document.querySelector('.load-more');
 
 const displayNoResultsNotification = () => {
@@ -100,6 +100,7 @@ function displayImages(images, totalHits) {
     //   const url = window.location.href.split('#')[0];
     //   const state = { gallery: images, total: totalHits };
     //   window.history.pushState(state, '', `${url}#lightbox`);
+    // });
   });
   lightbox.refresh();
 
@@ -130,7 +131,6 @@ function displayImages(images, totalHits) {
   });
   checkIfReachedEndOfResults(totalHits);
 }
-// info
 form.addEventListener('submit', async e => {
   e.preventDefault();
   let searchTerm = input.value.trim();
@@ -153,6 +153,35 @@ form.addEventListener('submit', async e => {
         notiflix.Notify.failure(
           'Nie znaleziono żadnych obrazów dla podanego hasła.'
         );
+      }
+    } catch (error) {
+      console.log(error);
+      notiflix.Notify.failure('Wystąpił błąd podczas pobierania danych.');
+    }
+  }
+});
+window.addEventListener('scroll', async () => {
+  const scrollPosition = window.innerHeight + window.pageYOffset;
+  const bodyHeight = document.body.offsetHeight;
+  const isScrollEnd = scrollPosition >= bodyHeight;
+
+  if (isScrollEnd) {
+    try {
+      page += 1;
+      const { hits, totalHits } = await searchImages(searchTerm, page);
+      console.log('Hits after fetching data:', hits);
+      if (hits && hits.length > 0) {
+        console.log('Hits before calling displayImages:', hits);
+        displayImages(hits, totalHits);
+      } else {
+        notiflix.Notify.failure(
+          'Nie znaleziono żadnych obrazów dla podanego hasła.'
+        );
+      }
+
+      if (hits.length < 1) {
+        loadMoreButton.classList.add('hidden');
+        notiflix.Notify.info('Nie ma więcej wyników do wyświetlenia.');
       }
     } catch (error) {
       console.log(error);
