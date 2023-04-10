@@ -1,12 +1,12 @@
 import axios from 'axios';
 import notiflix from 'notiflix';
 import { searchImages } from './api.js';
-import simpleLightbox from 'simplelightbox';
-import '../node_modules/simplelightbox/dist/simple-lightbox.js';
+import SimpleLightbox from 'SimpleLightbox';
 
 let page = 1;
 let searchTerm = '';
 const pageSize = 40;
+const loadMoreButton = document.querySelector('.load-more');
 
 const displayNoResultsNotification = () => {
   notiflix.Notify.warning(
@@ -32,6 +32,7 @@ function checkIfReachedEndOfResults() {
   }
 }
 
+const lightbox = new SimpleLightbox('.gallery-item');
 function displayImages(images, totalHits) {
   const galleryDiv = document.querySelector('.gallery');
   galleryDiv.innerHTML = '';
@@ -40,7 +41,6 @@ function displayImages(images, totalHits) {
     displayNoResultsNotification();
     return;
   }
-  const lightbox = new simpleLightbox('.photo-card a');
 
   images.forEach(image => {
     const card = document.createElement('div');
@@ -83,6 +83,8 @@ function displayImages(images, totalHits) {
     galleryDiv.appendChild(card);
   });
 
+  lightbox.refresh();
+
   const loadMoreButton = document.createElement('button');
   loadMoreButton.classList.add('load-more');
   loadMoreButton.textContent = 'Load More';
@@ -124,7 +126,7 @@ form.addEventListener('submit', async e => {
         if (totalHits > page * 40) {
           loadMoreButton.classList.remove('hidden');
         } else {
-          loadMoreButton.classList.add('hidden');
+          loadMoreButton.classList.add('visible');
           notiflix.Notify.warning(
             "We're sorry, but you've reached the end of search results."
           );
@@ -133,68 +135,6 @@ form.addEventListener('submit', async e => {
         notiflix.Notify.failure(
           'Nie znaleziono żadnych obrazów dla podanego hasła.'
         );
-      }
-    } catch (error) {
-      console.log(error);
-      notiflix.Notify.failure('Wystąpił błąd podczas pobierania danych.');
-    }
-  }
-});
-
-const loadMoreButton = document.querySelector('.load-more');
-loadMoreButton.addEventListener('click', async () => {
-  page++;
-  let searchTerm = input.value.trim();
-  try {
-    const { hits, totalHits } = await searchImages(searchTerm, page);
-    console.log('Hits after fetching data:', hits);
-    if (hits && hits.length > 0) {
-      console.log('Hits before calling displayImages:', hits);
-      displayImages(hits, totalHits);
-      if (totalHits <= page * 40) {
-        loadMoreButton.classList.add('hidden');
-        notiflix.Notify.warning(
-          "We're sorry, but you've reached the end of search results."
-        );
-      }
-    } else {
-      loadMoreButton.classList.add('hidden');
-      notiflix.Notify.warning(
-        "We're sorry, but you've reached the end of search results."
-      );
-    }
-  } catch (error) {
-    console.log(error);
-    notiflix.Notify.failure('Wystąpił błąd podczas pobierania danych.');
-  }
-});
-
-window.addEventListener('scroll', async () => {
-  const scrollPosition = window.innerHeight + window.pageYOffset;
-  const bodyHeight = document.body.offsetHeight;
-  const isScrollEnd = scrollPosition >= bodyHeight;
-
-  if (
-    isScrollEnd &&
-    loadMoreButton &&
-    !loadMoreButton.classList.contains('hidden')
-  ) {
-    try {
-      page += 1;
-      const { hits, totalHits } = await searchImages(searchTerm, page);
-      console.log('Hits after fetching data:', hits);
-      if (hits && hits.length > 0) {
-        console.log('Hits before calling displayImages:', hits);
-        displayImages(hits, totalHits);
-      } else {
-        notiflix.Notify.failure(
-          'Nie znaleziono żadnych obrazów dla podanego hasła.'
-        );
-      }
-
-      if (hits.length < 12) {
-        loadMoreButton.classList.add('hidden');
-        notiflix.Notify.info('Nie ma więcej wyników do wyświetlenia.');
       }
     } catch (error) {
       console.log(error);

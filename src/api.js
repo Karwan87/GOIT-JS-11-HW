@@ -1,4 +1,5 @@
 import axios from 'axios';
+import SimpleLightbox from 'SimpleLightbox';
 
 const API_KEY = '35038868-0cefdd0904fdf8a70a3b6f6a2';
 const PER_PAGE = 40;
@@ -19,6 +20,8 @@ export async function searchImages(searchTerm, page) {
     const data = response.data;
     const hits = data.hits;
     console.log(hits);
+
+    const lightbox = new SimpleLightbox('gallery-item');
     return {
       hits,
       totalHits: data.totalHits,
