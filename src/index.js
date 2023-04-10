@@ -2,6 +2,7 @@ import axios from 'axios';
 import notiflix from 'notiflix';
 import { searchImages } from './api.js';
 import SimpleLightbox from 'SimpleLightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 let page = 1;
 let searchTerm = '';
@@ -32,7 +33,14 @@ function checkIfReachedEndOfResults() {
   }
 }
 
-const lightbox = new SimpleLightbox('.gallery-item');
+const lightbox = new SimpleLightbox('.lightbox');
+
+window.addEventListener('popstate', event => {
+  if (event.state && event.state.gallery && event.state.total) {
+    displayImages(event.state.gallery, event.state.total);
+  }
+});
+
 function displayImages(images, totalHits) {
   const galleryDiv = document.querySelector('.gallery');
   galleryDiv.innerHTML = '';
@@ -48,13 +56,12 @@ function displayImages(images, totalHits) {
 
     const link = document.createElement('a');
     link.href = image.largeImageURL;
-    link.setAttribute('data-lighbox', 'gallery-item');
 
     const img = document.createElement('img');
     img.src = image.webformatURL;
     img.alt = image.tags;
     img.loading = 'lazy';
-    card.appendChild(img);
+    img.classList.add('lightbox');
 
     const infoDiv = document.createElement('div');
     infoDiv.classList.add('info');
@@ -77,12 +84,23 @@ function displayImages(images, totalHits) {
     downloads.classList.add('info-item');
     downloads.innerHTML = `<b>Downloads:</b> ${image.downloads}`;
     infoDiv.appendChild(downloads);
-
     card.appendChild(link);
+    link.appendChild(img);
     card.appendChild(infoDiv);
     galleryDiv.appendChild(card);
-  });
 
+    // back to last loaded results
+
+    // link.addEventListener('click', event => {
+    //   event.preventDefault();
+    //   const imageUrl = event.target.getAttribute('data-src');
+    //   const imageTitle = event.target.alt;
+    //   lightbox.open({ src: imageUrl, title: imageTitle });
+
+    //   const url = window.location.href.split('#')[0];
+    //   const state = { gallery: images, total: totalHits };
+    //   window.history.pushState(state, '', `${url}#lightbox`);
+  });
   lightbox.refresh();
 
   const loadMoreButton = document.createElement('button');
