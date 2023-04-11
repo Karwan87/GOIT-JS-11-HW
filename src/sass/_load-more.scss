@@ -1,6 +1,6 @@
 .load-more {
-  display: none; /* początkowo ukryty */
-  margin: 30px auto 0; /* margines 30px i wyśrodkowany */
+  // display: none; /* początkowo ukryty */
+  display: flex;
   width: 200px; /* szerokość przycisku */
 }
 
