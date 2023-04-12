@@ -44,6 +44,34 @@ form.addEventListener('submit', async e => {
     }
   }
 });
+function addLoadMoreButton() {
+  const button = document.createElement('button');
+  button.classList.add('load-more');
+  button.textContent = 'Load more';
+  button.addEventListener('click', () => {
+    page++;
+    searchImages(searchTerm, page);
+  });
+
+  const container = document.querySelector('#results');
+  container.appendChild(button);
+}
+async function performSearch() {
+  const searchTerm = document.querySelector('#search-input').value;
+  await searchImages(searchTerm, page);
+  addLoadMoreButton();
+}
+const searchInput = document.querySelector('#search-input');
+const searchButton = document.querySelector('#search-button');
+
+searchInput.addEventListener('change', () => {
+  page = 1;
+});
+
+searchButton.addEventListener('click', () => {
+  page = 1;
+  performSearch();
+});
 
 async function searchImages(term, page = 1) {
   searchTerm = term;
