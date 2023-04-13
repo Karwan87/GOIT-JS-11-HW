@@ -26,7 +26,7 @@ form.addEventListener('submit', async e => {
         console.log('Hits before calling displayImages:', hits) && totalHits;
         displayImages(hits, totalHits);
         if (totalHits > page * pageSize) {
-          loadMoreButton.classList.remove('visible');
+          loadMoreButton.classList.remove('hidden');
         } else {
           loadMoreButton.classList.add('hidden');
           notiflix.Notify.warning(
@@ -44,7 +44,11 @@ form.addEventListener('submit', async e => {
     }
   }
 });
+let isLoadMoreButtonCreated = false;
 function addLoadMoreButton() {
+  if (isLoadMoreButtonCreated) {
+    return;
+  }
   const button = document.createElement('button');
   button.classList.add('load-more');
   button.textContent = 'Load more';
@@ -55,6 +59,7 @@ function addLoadMoreButton() {
 
   const container = document.querySelector('#results');
   container.appendChild(button);
+  isLoadMoreButtonCreated = true;
 }
 async function performSearch() {
   const searchTerm = document.querySelector('#search-input').value;
@@ -68,7 +73,7 @@ searchInput.addEventListener('change', () => {
   page = 1;
 });
 
-searchButton.addEventListener('click', () => {
+searchButton.addEventListener.onclick('click', () => {
   page = 1;
   performSearch();
 });
@@ -187,7 +192,7 @@ function displayImages(images, totalHits) {
     }
 
     if (totalHits <= page * pageSize) {
-      loadMoreButton.classList.add('hidden'); // Dodanie klasy 'hidden' po ostatnim wyświetleniu wyników
+      loadMoreButton.classList.add('hidden');
       notiflix.Notify.warning(
         "We're sorry, but you've reached the end of search results."
       );
@@ -231,6 +236,7 @@ async function loadMoreResults() {
         if (hits && hits.length > 0) {
           console.log('Hits before calling displayImages:', hits);
           displayImages(images, totalHits);
+          loadMoreButton.classList.add('hidden');
         } else {
           notiflix.Notify.failure(
             'Nie znaleziono żadnych obrazów dla podanego hasła.'
