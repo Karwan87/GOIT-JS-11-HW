@@ -14,7 +14,10 @@ const form = document.querySelector('form');
 const input = form.querySelector('input');
 const resultsDiv = document.getElementById('results');
 const lightbox = new SimpleLightbox('.lightbox');
+let isLoadMoreButtonCreated = false;
+let isLoadingMore = false;
 
+// pole wyszukiwania
 form.addEventListener('submit', async e => {
   e.preventDefault();
   let searchTerm = input.value.trim();
@@ -26,9 +29,9 @@ form.addEventListener('submit', async e => {
         console.log('Hits before calling displayImages:', hits) && totalHits;
         displayImages(hits, totalHits);
         if (totalHits > page * pageSize) {
-          loadMoreButton.classList.remove('hidden');
+          hideLoadMoreButton();
         } else {
-          loadMoreButton.classList.add('hidden');
+          hideLoadMoreButton();
           notiflix.Notify.warning(
             "We're sorry, but you've reached the end of search results."
           );
@@ -44,28 +47,33 @@ form.addEventListener('submit', async e => {
     }
   }
 });
-let isLoadMoreButtonCreated = false;
-function addLoadMoreButton() {
-  if (isLoadMoreButtonCreated) {
-    return;
-  }
-  const button = document.createElement('button');
-  button.classList.add('load-more');
-  button.textContent = 'Load more';
-  button.addEventListener('click', () => {
-    page++;
-    searchImages(searchTerm, page);
-  });
 
-  const container = document.querySelector('#results');
-  container.appendChild(button);
-  isLoadMoreButtonCreated = true;
-}
-async function performSearch() {
-  const searchTerm = document.querySelector('#search-input').value;
-  await searchImages(searchTerm, page);
-  addLoadMoreButton();
-}
+// dodanie przycisku lub ukrycie
+const showLoadMoreButton = () => {
+  if (!isLoadMoreButtonCreated) {
+    const button = document.createElement('button');
+    button.classList.add('load-more');
+    button.textContent = 'Load more';
+    button.addEventListener('click', () => {
+      isLoadingMore = true;
+      page++;
+      searchImages(searchTerm, page);
+    });
+    const container = document.querySelector('#results');
+    container.appendChild(button);
+    isLoadMoreButtonCreated = true;
+  }
+  const loadMoreButton = document.querySelector('.load-more');
+  loadMoreButton.classList.remove('hidden');
+};
+
+const hideLoadMoreButton = () => {
+  const loadMoreButton = document.querySelector('.load-more');
+  if (loadMoreButton) {
+    loadMoreButton.classList.add('hidden');
+  }
+};
+
 const searchInput = document.querySelector('#search-input');
 const searchButton = document.querySelector('#search-button');
 
@@ -73,11 +81,7 @@ searchInput.addEventListener('change', () => {
   page = 1;
 });
 
-searchButton.addEventListener.onclick('click', () => {
-  page = 1;
-  performSearch();
-});
-
+// funkcjawywołująca searchImages (to co wyświetla strona)
 async function searchImages(term, page = 1) {
   searchTerm = term;
   try {
@@ -95,7 +99,6 @@ async function searchImages(term, page = 1) {
     const data = response.data;
     const hits = data.hits;
     hits.forEach(hit => {
-      // tutaj stwórz element z obrazem i dodaj go do strony
       const imageElement = document.createElement('img');
       imageElement.src = hit.webformatURL;
       document.querySelector('.gallery').appendChild(imageElement);
@@ -116,6 +119,7 @@ async function searchImages(term, page = 1) {
   }
 }
 
+// jeśli nie ma więcej wyników to:
 const displayNoResultsNotification = () => {
   notiflix.Notify.warning(
     'Sorry, there are no images matching your search query. Please try again.'
@@ -219,44 +223,3 @@ function checkIfReachedEndOfResults() {
     }
   }
 }
-async function loadMoreResults() {
-  const gallery = document.querySelector('.gallery');
-  const loadMoreButton = document.querySelector('.load-more');
-
-  if (!loadMoreButton) {
-    const galleryRect = gallery.getBoundingClientRect();
-    const galleryBottom = galleryRect.top + galleryRect.height;
-
-    if (window.innerHeight + window.pageYOffset >= galleryBottom) {
-      try {
-        page += 1;
-        const { hits, totalHits } = await searchImages(searchTerm, page);
-
-        console.log('Hits after fetching data:', hits);
-        if (hits && hits.length > 0) {
-          console.log('Hits before calling displayImages:', hits);
-          displayImages(images, totalHits);
-          loadMoreButton.classList.add('hidden');
-        } else {
-          notiflix.Notify.failure(
-            'Nie znaleziono żadnych obrazów dla podanego hasła.'
-          );
-        }
-
-        if (hits.length < 1) {
-          loadMoreButton.classList.add('hidden');
-          notiflix.Notify.info('Nie ma więcej wyników do wyświetlenia.');
-        }
-      } catch (error) {
-        console.log(error);
-        notiflix.Notify.failure('Wystąpił błąd podczas pobierania danych.');
-      }
-    }
-  }
-}
-
-window.addEventListener('popstate', event => {
-  if (event.state && event.state.gallery && event.state.total) {
-    displayImages(event.state.gallery, event.state.total);
-  }
-});
