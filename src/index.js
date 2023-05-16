@@ -128,7 +128,7 @@ const displayNoResultsNotification = () => {
 
 function displayImages(images, totalHits) {
   const galleryDiv = document.querySelector('.gallery');
-  galleryDiv.innerHTML = '';
+  // galleryDiv.innerHTML = '';
 
   if (totalHits === 0) {
     displayNoResultsNotification();

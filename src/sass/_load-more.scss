@@ -1,5 +1,5 @@
 .load-more {
-  display: none; /* początkowo ukryty */
+  height: 25px;
   display: flex;
   justify-content: center;
   width: 200px; /* szerokość przycisku */
@@ -7,6 +7,7 @@
 
 .hidden {
   display: none;
+  justify-content: center;
 }
 .visible {
   display: flex;
