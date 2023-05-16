@@ -79,7 +79,25 @@ const searchButton = document.querySelector('#search-button');
 
 searchInput.addEventListener('change', () => {
   page = 1;
+  clearGallery();
+  performSearch();
 });
+searchButton.addEventListener('click', () => {
+  page = 1;
+  clearGallery();
+  performSearch();
+});
+
+function clearGallery() {
+  const galleryDiv = document.querySelector('#results');
+  galleryDiv.innerHTML = '';
+}
+
+async function performSearch() {
+  const searchTerm = document.querySelector('#search-input').value;
+  await searchImages(searchTerm, page);
+  addLoadMoreButton();
+}
 
 // funkcjawywołująca searchImages (to co wyświetla strona)
 async function searchImages(term, page = 1) {
@@ -187,6 +205,7 @@ function displayImages(images, totalHits) {
 
   loadMoreButton.addEventListener('click', async () => {
     page++;
+    performSearch();
     try {
       const { hits, totalHits } = await searchImages(searchTerm, page);
       displayImages(hits, totalHits);
