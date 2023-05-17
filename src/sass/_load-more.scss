@@ -1,6 +1,6 @@
 .load-more {
   height: 25px;
-  display: flex;
+  display: none;
   justify-content: center;
   width: 200px; /* szerokość przycisku */
 }
@@ -10,5 +10,7 @@
   justify-content: center;
 }
 .visible {
-  display: flex;
+  display: none;
+  justify-content: center;
+  background-color: rgb(221, 209, 194);
 }
