@@ -3,7 +3,7 @@ import notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-const API_KEY = '35038868-0cefdd0904fdf8a70a3b6f6a2';
+const API_KEY = 'codeishidden';
 const PER_PAGE = 40;
 const form = document.querySelector('form');
 const input = form.querySelector('input');
